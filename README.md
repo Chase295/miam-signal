@@ -4,6 +4,29 @@ Python-Client für das IoT Orchestrator System mit Signal-Messaging-Integration.
 
 **🐳 Docker Image verfügbar auf Docker Hub:** [chase295/miam-signal](https://hub.docker.com/r/chase295/miam-signal)
 
+## ⚠️ Voraussetzung: Signal CLI REST API
+
+**WICHTIG:** Dieses Projekt benötigt einen laufenden [Signal CLI REST API](https://github.com/bbernhard/signal-cli-rest-api) Server. Ohne diesen funktioniert das Projekt nicht!
+
+Der Signal Device Client verbindet sich mit dem Signal CLI REST API Server über:
+- **WebSocket**: Für den Empfang von Signal-Nachrichten (`wss://{SIGNAL_SERVER_URL}/v1/receive/{number}`)
+- **REST API**: Für das Versenden von Signal-Nachrichten (`https://{SIGNAL_SERVER_URL}/v2/send`)
+
+**Setup Signal CLI REST API:**
+- Repository: [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api)
+- Docker Hub: [bbernhard/signal-cli-rest-api](https://hub.docker.com/r/bbernhard/signal-cli-rest-api)
+- Dokumentation: [signal-cli-rest-api Documentation](https://bbernhard.github.io/signal-cli-rest-api/)
+
+**Schnellstart Signal CLI REST API:**
+```bash
+# Signal CLI REST API starten
+docker run -d --name signal-api --restart=always -p 8080:8080 \
+  -v signal-cli-config:/home/.local/share/signal-cli \
+  bbernhard/signal-cli-rest-api:latest
+```
+
+Die `SIGNAL_SERVER_URL` in der `docker-compose.yml` muss auf diesen Signal CLI REST API Server zeigen!
+
 ## 📋 Features
 
 - ✅ **Signal-Integration**: Empfang und Versand von Signal-Nachrichten
@@ -33,8 +56,11 @@ miam-signal/
 ### Voraussetzungen
 
 - **Docker** und **Docker Compose** installiert ([Installationsanleitung](https://docs.docker.com/get-docker/))
+- **Signal CLI REST API Server** muss laufen ([GitHub Repository](https://github.com/bbernhard/signal-cli-rest-api))
 - Zugriff auf IoT Orchestrator WebSocket-Gateway
 - Zugriff auf Signal-Server (WebSocket und REST API)
+
+**⚠️ Wichtig:** Stelle sicher, dass der Signal CLI REST API Server läuft, bevor du den Signal Device Client startest!
 
 ### Installation
 
@@ -49,7 +75,25 @@ cd miam-signal
 wget https://raw.githubusercontent.com/Chase295/miam-signal/main/docker-compose.yml
 ```
 
-#### Schritt 2: Konfiguration anpassen
+#### Schritt 2: Signal CLI REST API Server starten
+
+⚠️ **WICHTIG:** Starte zuerst den Signal CLI REST API Server, bevor du den Signal Device Client konfigurierst!
+
+```bash
+# Signal CLI REST API mit Docker Compose starten
+# Oder siehe: https://github.com/bbernhard/signal-cli-rest-api
+
+docker run -d --name signal-api --restart=always -p 8080:8080 \
+  -v signal-cli-config:/home/.local/share/signal-cli \
+  bbernhard/signal-cli-rest-api:latest
+
+# QR-Code für Verlinkung abrufen
+# Öffne http://localhost:8080/v1/qrcodelink?device_name=signal-api im Browser
+```
+
+**Weitere Informationen:** Siehe [Signal CLI REST API Dokumentation](https://github.com/bbernhard/signal-cli-rest-api)
+
+#### Schritt 3: Konfiguration anpassen
 
 Öffne `docker-compose.yml` und passe die Umgebungsvariablen an:
 
@@ -76,7 +120,7 @@ environment:
 - `SIGNAL_SERVER_URL` - Die URL deines Signal-Servers
 - `SIGNAL_RECEIVE_NUMBER`, `SIGNAL_SEND_NUMBER`, `SIGNAL_RECIPIENT_NUMBER` - Deine Signal-Nummern
 
-#### Schritt 3: Container starten
+#### Schritt 4: Container starten
 
 ```bash
 # Container starten (lädt automatisch das Image von Docker Hub)
@@ -475,7 +519,14 @@ docker-compose up -d
 
 ## 📚 Weitere Ressourcen
 
-### Dokumentation
+### Signal CLI REST API (Erforderlich!)
+
+- **[Signal CLI REST API GitHub](https://github.com/bbernhard/signal-cli-rest-api)** - Hauptprojekt (⚠️ **ERFORDERLICH**)
+- **[Signal CLI REST API Docker Hub](https://hub.docker.com/r/bbernhard/signal-cli-rest-api)** - Docker Image
+- **[Signal CLI REST API Dokumentation](https://bbernhard.github.io/signal-cli-rest-api/)** - Offizielle Dokumentation
+- **[Signal CLI REST API Swagger API](https://bbernhard.github.io/signal-cli-rest-api/)** - API Referenz
+
+### Weitere Dokumentation
 
 - [Docker Compose Dokumentation](https://docs.docker.com/compose/)
 - [WebSocket Protocol](https://datatracker.ietf.org/doc/html/rfc6455)
@@ -483,6 +534,7 @@ docker-compose up -d
 
 ### Ähnliche Projekte
 
+- **[Signal CLI REST API](https://github.com/bbernhard/signal-cli-rest-api)** - Basis-Projekt für Signal-Integration (⚠️ **ERFORDERLICH**)
 - [IoT Orchestrator](https://github.com/Chase295) - Hauptprojekt
 - Weitere Signal-Integrationen
 
