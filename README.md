@@ -37,7 +37,11 @@ Die `SIGNAL_SERVER_URL` in der `docker-compose.yml` muss auf diesen Signal CLI R
 - ✅ **Konfigurierbar**: Alle Einstellungen über Umgebungsvariablen
 - ✅ **Einfache Installation**: Einfach `docker-compose up` - kein Build nötig!
 - ✅ **Automatische Reconnection**: Automatische Wiederverbindung bei Verbindungsabbrüchen
+  - Exponentielles Backoff (max 60s) für stabile Verbindungen
+  - Unabhängige Reconnect-Logik für Signal und IoT Orchestrator
+  - IoT-Verbindung bleibt stabil, auch wenn Signal disconnected ist
 - ✅ **Streaming Support**: Unterstützt gestreamte TXT Outputs vom IoT Orchestrator
+- ✅ **Konfigurierbare Reconnect-Delays**: Anpassbare Wartezeiten für Reconnect-Versuche
 
 ## 📁 Projektstruktur
 
@@ -168,6 +172,9 @@ Alle Konfigurationswerte werden über Umgebungsvariablen gesteuert:
 | `SIGNAL_SEND_NUMBER` | Eigene Signal-Nummer (Versand) | `+4915122215051` |
 | `SIGNAL_RECIPIENT_NUMBER` | Standard-Empfängernummer | `+4917681328005` |
 | `SIGNAL_VERIFY_SSL` | SSL-Zertifikat-Verifizierung | `False` |
+| `SIGNAL_PROTOCOL` | Signal-Protokoll (`http` oder `https`) | `https` |
+| `SIGNAL_RECONNECT_DELAY` | Reconnect-Delay für Signal in Sekunden | `10` |
+| `IOT_RECONNECT_DELAY` | Reconnect-Delay für IoT Orchestrator in Sekunden | `10` |
 
 ### SSL-Konfiguration
 
@@ -552,6 +559,30 @@ Bei Fragen oder Problemen bitte ein Issue erstellen oder die Dokumentation des I
 - **Pull Requests**: Beiträge sind willkommen!
 
 ### Changelog
+
+#### v1.0.3 (2025-01-01)
+
+- 🔄 **Verbesserte Reconnect-Logik**:
+  - Unabhängige Reconnect-Loops für Signal und IoT Orchestrator
+  - Exponentielles Backoff (max 60s) für stabilere Verbindungen
+  - IoT-Verbindung bleibt stabil, auch wenn Signal disconnected ist
+- ⚙️ **Konfigurierbare Reconnect-Delays**: 
+  - `SIGNAL_RECONNECT_DELAY` für Signal-Verbindung
+  - `IOT_RECONNECT_DELAY` für IoT Orchestrator-Verbindung
+- 🔧 **Stabile Architektur**: Signal läuft unabhängig mit eigenem Auto-Reconnect
+- 📝 **Verbesserte Logging**: Klarere Meldungen und Statusanzeigen
+
+#### v1.0.2 (2025-10-31)
+
+- ✅ HTTP/HTTPS und DNS Unterstützung beim Signal Server
+- ✅ Verbessertes Logging-Format ohne ANSI-Farben
+- ✅ Intelligente URL-Konstruktion (unterstützt DNS-Namen, IP:Port, explizite Protokolle)
+
+#### v1.0.1 (2025-10-31)
+
+- ✅ Docker Hub Integration
+- ✅ Multi-Architecture Support (linux/amd64, linux/arm64)
+- ✅ Einfache Installation direkt von Docker Hub
 
 #### v1.0.0 (2025-10-31)
 

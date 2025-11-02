@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Kopiere das Python-Skript
 COPY app/device-signal.py .
 
-# Führe das Skript aus
-CMD ["python3", "device-signal.py"]
+# Führe das Skript aus (mit -u für unbuffered output)
+CMD ["python3", "-u", "device-signal.py"]
 
