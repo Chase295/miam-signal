@@ -1,17 +1,18 @@
 services:
   signal-client:
-    image: chase295/miam-signal:latest
+    build: .
     restart: unless-stopped
     environment:
       # IoT Orchestrator
-      WS_HOST: "10.0.3.17"              # IoT Orchestrator Host (BITTE ANPASSEN)
+      WS_HOST: "100.108.18.43"              # IoT Orchestrator Host (BITTE ANPASSEN)
       WS_PORT: 8080                      # WebSocket Gateway Port
       WS_PATH: "/ws/external"           # WebSocket Path
       DEVICE_NAME: "signal-device"      # Name des Gerätes
-      SIMPLE_API_KEY: "BITTE-DEIN-API-KEY-EINFUEGEN" # ⚠️ HIER API-KEY EINTRAGEN!
+      SIMPLE_API_KEY: "change-this-in-production" # ⚠️ HIER API-KEY EINTRAGEN!
 
       # Signal-Konfiguration
-      SIGNAL_SERVER_URL: "signal.local.chase295.de"  # Signal-Server (BITTE ANPASSEN)
+      SIGNAL_SERVER_URL: "100.108.18.43:8070"  # Signal-Server (DNS oder IP:Port, z.B. "100.108.18.43:8070") (BITTE ANPASSEN)
+      SIGNAL_PROTOCOL: "http"                        # "http" oder "https" (Standard: "https")
       SIGNAL_RECEIVE_NUMBER: "+4915122215051"         # Eigene Signal-Nummer (Empfang) (BITTE ANPASSEN)
       SIGNAL_SEND_NUMBER: "+4915122215051"           # Eigene Signal-Nummer (Versand) (BITTE ANPASSEN)
       SIGNAL_RECIPIENT_NUMBER: "+4917681328005"      # Standard-Empfänger (BITTE ANPASSEN)
